@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Holding, ESGScore, PortfolioESGScores } from './types';
 import { TEST_PORTFOLIO, ESG_COLORS } from './constants';
-import { fetchESGScore } from './services/esgService';
+import { fetchStockData } from './services/realDataService';
 import { calculatePortfolioMetrics } from './services/portfolioService';
 import PortfolioInput from './components/PortfolioInput';
 import HoldingsTable from './components/HoldingsTable';
@@ -17,10 +17,16 @@ import BenchmarkComparison from './components/BenchmarkComparison';
 const App: React.FC = () => {
     const [holdings, setHoldings] = useState<Holding[]>(TEST_PORTFOLIO);
     const [esgData, setEsgData] = useState<Map<string, ESGScore>>(new Map());
+    const [stockPrices, setStockPrices] = useState<Map<string, number>>(new Map());
     const [loadingTickers, setLoadingTickers] = useState<Set<string>>(new Set());
     const [reportDate, setReportDate] = useState('');
+    const [highlightedTicker, setHighlightedTicker] = useState<string | null>(null);
 
     const existingTickers = useMemo(() => new Set(holdings.map(h => h.ticker)), [holdings]);
+
+    const handleBarClick = (ticker: string) => {
+        setHighlightedTicker(prev => (prev === ticker ? null : ticker));
+    };
 
     const handlePrint = () => {
         const date = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -30,7 +36,7 @@ const App: React.FC = () => {
         }, 100);
     };
 
-    const fetchAllEsgScores = useCallback(async (currentHoldings: Holding[]) => {
+    const fetchAllStockData = useCallback(async (currentHoldings: Holding[]) => {
         const newLoadingTickers = new Set<string>();
         currentHoldings.forEach(h => {
             if (!esgData.has(h.ticker)) {
@@ -42,14 +48,24 @@ const App: React.FC = () => {
 
         setLoadingTickers(prev => new Set([...prev, ...newLoadingTickers]));
 
-        const promises = Array.from(newLoadingTickers).map(ticker => fetchESGScore(ticker));
+        const promises = Array.from(newLoadingTickers).map(ticker => fetchStockData(ticker));
         const results = await Promise.all(promises);
 
         setEsgData(prev => {
             const newMap = new Map(prev);
-            results.forEach(score => {
-                if (score) {
-                    newMap.set(score.ticker, score);
+            results.forEach(data => {
+                if (data) {
+                    newMap.set(data.esg.ticker, data.esg);
+                }
+            });
+            return newMap;
+        });
+        
+        setStockPrices(prev => {
+            const newMap = new Map(prev);
+            results.forEach(data => {
+                if (data) {
+                    newMap.set(data.esg.ticker, data.price);
                 }
             });
             return newMap;
@@ -64,12 +80,12 @@ const App: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        fetchAllEsgScores(holdings);
-    }, [holdings, fetchAllEsgScores]);
+        fetchAllStockData(holdings);
+    }, [holdings, fetchAllStockData]);
     
     const { portfolioWithMarketValue, weightedScores } = useMemo(() => {
-        return calculatePortfolioMetrics(holdings, esgData);
-    }, [holdings, esgData]);
+        return calculatePortfolioMetrics(holdings, esgData, stockPrices);
+    }, [holdings, esgData, stockPrices]);
 
     const addHolding = (holding: Holding) => {
         setHoldings(prev => [...prev, holding]);
@@ -78,6 +94,11 @@ const App: React.FC = () => {
     const removeHolding = (ticker: string) => {
         setHoldings(prev => prev.filter(h => h.ticker !== ticker));
         setEsgData(prev => {
+            const newMap = new Map(prev);
+            newMap.delete(ticker);
+            return newMap;
+        });
+        setStockPrices(prev => {
             const newMap = new Map(prev);
             newMap.delete(ticker);
             return newMap;
@@ -133,7 +154,11 @@ const App: React.FC = () => {
                                 
                                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 print-chart-container">
                                     <ESGRadarChart portfolioScores={weightedScores} />
-                                    <HoldingsBarChart esgData={Array.from(esgData.values())} />
+                                    <HoldingsBarChart
+                                        esgData={Array.from(esgData.values())}
+                                        onBarClick={handleBarClick}
+                                        highlightedTicker={highlightedTicker}
+                                    />
                                 </div>
 
                                 <BenchmarkComparison portfolioScores={weightedScores} />
@@ -143,6 +168,7 @@ const App: React.FC = () => {
                                     esgData={esgData}
                                     onRemoveHolding={removeHolding}
                                     loadingTickers={loadingTickers}
+                                    highlightedTicker={highlightedTicker}
                                 />
                             </>
                         ) : (

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Holding, ESGScore } from '../types';
 import { TrashIcon } from './icons';
@@ -9,9 +8,10 @@ interface HoldingsTableProps {
   esgData: Map<string, ESGScore>;
   onRemoveHolding: (ticker: string) => void;
   loadingTickers: Set<string>;
+  highlightedTicker: string | null;
 }
 
-const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings, esgData, onRemoveHolding, loadingTickers }) => {
+const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings, esgData, onRemoveHolding, loadingTickers, highlightedTicker }) => {
   const getRatingClass = (performance: ESGScore['esgPerformance']) => {
     switch (performance) {
       case 'LEADER': return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200';
@@ -42,8 +42,9 @@ const HoldingsTable: React.FC<HoldingsTableProps> = ({ holdings, esgData, onRemo
             {holdings.map((holding) => {
               const esg = esgData.get(holding.ticker);
               const isLoading = loadingTickers.has(holding.ticker);
+              const isHighlighted = highlightedTicker === holding.ticker;
               return (
-                <tr key={holding.ticker}>
+                <tr key={holding.ticker} className={`${isHighlighted ? 'bg-indigo-100 dark:bg-indigo-900/50 ring-2 ring-indigo-500' : ''} transition-all duration-300`}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{holding.ticker}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{holding.shares}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{holding.marketValue ? `$${holding.marketValue.toFixed(2)}` : '-'}</td>

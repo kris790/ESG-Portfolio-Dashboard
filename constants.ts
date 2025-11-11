@@ -22,11 +22,11 @@ export const ESGU_BENCHMARK: PortfolioESGScores = {
   governanceScore: 6.5,
 };
 
-export const SUSA_BENCHMARK: PortfolioESGScores = {
-  totalESG: 17.5,
-  environmentScore: 4.5,
-  socialScore: 6.0,
-  governanceScore: 7.0,
+export const SUSL_BENCHMARK: PortfolioESGScores = {
+  totalESG: 16.2,
+  environmentScore: 4.0,
+  socialScore: 5.8,
+  governanceScore: 6.4,
 };
 
 export const ESG_COLORS = {

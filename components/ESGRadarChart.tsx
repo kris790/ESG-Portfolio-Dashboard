@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { PortfolioESGScores } from '../types';
 import { ESG_COLORS, SP500_BENCHMARK } from '../constants';
+import CustomTooltip from './CustomTooltip';
 
 interface ESGRadarChartProps {
   portfolioScores: PortfolioESGScores;
@@ -23,7 +23,7 @@ const ESGRadarChart: React.FC<ESGRadarChartProps> = ({ portfolioScores }) => {
           <PolarGrid />
           <PolarAngleAxis dataKey="subject" tick={{ fill: '#6b7280', fontSize: 12 }} />
           <PolarRadiusAxis angle={30} domain={[0, 25]} />
-          <Tooltip contentStyle={{ backgroundColor: 'rgba(31, 41, 55, 0.8)', border: 'none', borderRadius: '0.5rem' }} labelStyle={{ color: '#f9fafb' }} />
+          <Tooltip content={<CustomTooltip />} />
           <Legend />
           <Radar name="Portfolio" dataKey="Portfolio" stroke={ESG_COLORS.social} fill={ESG_COLORS.social} fillOpacity={0.6} />
           <Radar name="S&P 500" dataKey="S&P 500" stroke={ESG_COLORS.benchmark} fill={ESG_COLORS.benchmark} fillOpacity={0.4} />

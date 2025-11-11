@@ -1,20 +1,10 @@
-
 import { Holding, ESGScore, PortfolioESGScores } from '../types';
 
-// Mock price data for calculating market value
-const MOCK_PRICES: { [key: string]: number } = {
-  'AAPL': 170.5,
-  'MSFT': 420.0,
-  'TSLA': 180.2,
-  'XOM': 115.8,
-  'GOOGL': 175.4,
-  'NVDA': 1200.0,
-  'AMZN': 185.1,
-  'JPM': 200.3,
-  'V': 275.9,
-};
-
-export const calculatePortfolioMetrics = (holdings: Holding[], esgData: Map<string, ESGScore>): {
+export const calculatePortfolioMetrics = (
+  holdings: Holding[],
+  esgData: Map<string, ESGScore>,
+  prices: Map<string, number>
+): {
   portfolioWithMarketValue: Holding[];
   totalMarketValue: number;
   weightedScores: PortfolioESGScores;
@@ -22,7 +12,7 @@ export const calculatePortfolioMetrics = (holdings: Holding[], esgData: Map<stri
   let totalMarketValue = 0;
   
   const portfolioWithMarketValue = holdings.map(h => {
-    const price = MOCK_PRICES[h.ticker.toUpperCase()] || Math.random() * 500 + 50; // Use mock price or random
+    const price = prices.get(h.ticker.toUpperCase()) || 0;
     const marketValue = h.shares * price;
     totalMarketValue += marketValue;
     return { ...h, marketValue };
