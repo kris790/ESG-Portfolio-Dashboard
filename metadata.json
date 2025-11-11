@@ -1,0 +1,5 @@
+{
+  "name": "ESG Portfolio Dashboard",
+  "description": "An ESG (Environmental, Social, Governance) portfolio tracker that helps investors monitor the sustainability performance of their stock holdings using AI-powered insights from Gemini.",
+  "requestFramePermissions": []
+}

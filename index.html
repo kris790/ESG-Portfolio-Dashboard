@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ESG Portfolio Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @media print {
+        @page {
+          size: A4;
+          margin: 2cm;
+        }
+
+        /* --- Base & Color Resets --- */
+        body {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+          counter-reset: page;
+        }
+        body, .dark, .dark body {
+          background-color: #ffffff !important;
+        }
+        .dark .dark\:text-gray-100, .dark .dark\:text-white, .dark .dark\:text-gray-200, .dark .dark\:text-gray-300, .dark .dark\:text-gray-400,
+        .dark .dark\:text-gray-800, .dark .dark\:text-gray-900 {
+            color: #1f2937 !important;
+        }
+        .recharts-legend-item-text, .recharts-text, .recharts-cartesian-axis-tick-value tspan {
+            fill: #1f2937 !important;
+        }
+
+        /* --- Visibility & Layout --- */
+        .no-print { display: none !important; }
+        #root > div { padding: 0 !important; }
+        main { max-width: 100% !important; margin: 0 !important; }
+        main > .grid { display: block !important; }
+
+        /* --- Header & Footer --- */
+        header {
+          border-bottom: 2px solid #1f2937;
+          padding-bottom: 0.5rem;
+          margin-bottom: 2rem !important;
+        }
+        header h1 { font-size: 22pt; font-weight: bold; color: #1f2937 !important; }
+        header p { font-size: 11pt; color: #374151 !important; }
+        
+        .print-footer {
+            position: fixed;
+            bottom: 0;
+            left: 2cm;
+            right: 2cm;
+            display: flex;
+            justify-content: space-between;
+            font-size: 9pt;
+            color: #4b5563;
+            border-top: 1px solid #d1d5db;
+            padding-top: 0.5rem;
+        }
+        .print-footer .page-number::after {
+            content: "Page " counter(page);
+        }
+
+        /* --- Content Styling --- */
+        .print-container > div, .print-container > .grid > div, .print-chart-container > div {
+          box-shadow: none !important;
+          border: 1px solid #e5e7eb;
+          background-color: #ffffff !important;
+        }
+        .print-container h3 {
+            color: #000 !important;
+            font-size: 16pt;
+            font-weight: 600;
+            padding-bottom: 0.5rem;
+            border-bottom: 1.5px solid #d1d5db;
+            margin-top: 1.5rem !important;
+            margin-bottom: 1.5rem !important;
+        }
+        
+        /* --- Metric Cards --- */
+        .metric-card-print { border-left-width: 4px; }
+        .metric-card-print.print-border-emerald-500 { border-left-color: #10b981; }
+        .metric-card-print.print-border-green-500 { border-left-color: #22c55e; }
+        .metric-card-print.print-border-blue-500 { border-left-color: #3b82f6; }
+        .metric-card-print.print-border-purple-500 { border-left-color: #8b5cf6; }
+        .metric-card-print.print-border-amber-500 { border-left-color: #f59e0b; }
+        .metric-card-print.print-border-red-500 { border-left-color: #ef4444; }
+
+        /* --- Chart Rendering & Page Breaks --- */
+        .print-chart-container {
+            display: block !important;
+            page-break-after: always;
+        }
+        .print-chart-container > div {
+            width: 100% !important;
+            page-break-inside: avoid;
+            margin-bottom: 2rem;
+        }
+        .recharts-responsive-container { height: 350px !important; }
+        .recharts-wrapper { margin: 0 auto; }
+        
+        /* --- Table Styling --- */
+        table { width: 100%; border-collapse: collapse; font-size: 9pt; }
+        thead { background-color: #f9fafb !important; }
+        th, td { border: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; }
+        td span[class*="bg-"] {
+            background-color: #ffffff !important;
+            color: #1f2937 !important;
+            border: 1px solid #d1d5db;
+        }
+      }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.4.1"
+  }
+}
+</script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
