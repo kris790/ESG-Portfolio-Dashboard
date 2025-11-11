@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Holding, ESGScore, PortfolioESGScores } from './types';
-import { TEST_PORTFOLIO, ESG_COLORS } from './constants';
+import { DEMO_PORTFOLIO, ESG_COLORS } from './constants';
 import { fetchStockData } from './services/realDataService';
 import { calculatePortfolioMetrics } from './services/portfolioService';
 import PortfolioInput from './components/PortfolioInput';
@@ -15,7 +15,7 @@ import Welcome from './components/Welcome';
 import BenchmarkComparison from './components/BenchmarkComparison';
 
 const App: React.FC = () => {
-    const [holdings, setHoldings] = useState<Holding[]>(TEST_PORTFOLIO);
+    const [holdings, setHoldings] = useState<Holding[]>(DEMO_PORTFOLIO);
     const [esgData, setEsgData] = useState<Map<string, ESGScore>>(new Map());
     const [stockPrices, setStockPrices] = useState<Map<string, number>>(new Map());
     const [loadingTickers, setLoadingTickers] = useState<Set<string>>(new Set());

@@ -1,11 +1,11 @@
 import { Holding, PortfolioESGScores } from './types';
 
-export const TEST_PORTFOLIO: Holding[] = [
-  { ticker: 'AAPL', shares: 10 },
+export const DEMO_PORTFOLIO: Holding[] = [
+  { ticker: 'AAPL', shares: 25 },
   { ticker: 'MSFT', shares: 15 },
-  { ticker: 'TSLA', shares: 5 },
-  { ticker: 'XOM', shares: 20 },
-  { ticker: 'GOOGL', shares: 8 }
+  { ticker: 'TSLA', shares: 10 },
+  { ticker: 'GOOGL', shares: 20 },
+  { ticker: 'NVDA', shares: 8 },
 ];
 
 export const SP500_BENCHMARK: PortfolioESGScores = {

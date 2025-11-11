@@ -49,30 +49,28 @@ interface StockData {
 // In a real application, this would call a backend endpoint that sources this data.
 export const fetchStockData = (ticker: string): Promise<StockData | null> => {
   return new Promise((resolve) => {
-    // Simulate network delay
-    setTimeout(() => {
-      const upperTicker = ticker.toUpperCase();
-      const data = MOCK_STOCK_DATA[upperTicker];
+    // No network delay for screenshot mode
+    const upperTicker = ticker.toUpperCase();
+    const data = MOCK_STOCK_DATA[upperTicker];
 
-      if (data) {
-        resolve({
-          esg: { ticker: upperTicker, ...data.esg },
-          price: data.price
-        });
-      } else {
-        // Simulate a "not found" scenario with random data for demonstration
-        const randomEsg: ESGScore = {
-          ticker: upperTicker,
-          totalESG: Math.random() * 40 + 5,
-          environmentScore: Math.random() * 20,
-          socialScore: Math.random() * 15,
-          governanceScore: Math.random() * 10,
-          highestControversy: Math.floor(Math.random() * 5),
-          esgPerformance: 'UNKNOWN',
-        };
-        const randomPrice = Math.random() * 500 + 50;
-        resolve({ esg: randomEsg, price: randomPrice });
-      }
-    }, 500 + Math.random() * 500);
+    if (data) {
+      resolve({
+        esg: { ticker: upperTicker, ...data.esg },
+        price: data.price
+      });
+    } else {
+      // Simulate a "not found" scenario with random data for demonstration
+      const randomEsg: ESGScore = {
+        ticker: upperTicker,
+        totalESG: Math.random() * 40 + 5,
+        environmentScore: Math.random() * 20,
+        socialScore: Math.random() * 15,
+        governanceScore: Math.random() * 10,
+        highestControversy: Math.floor(Math.random() * 5),
+        esgPerformance: 'UNKNOWN',
+      };
+      const randomPrice = Math.random() * 500 + 50;
+      resolve({ esg: randomEsg, price: randomPrice });
+    }
   });
 };
